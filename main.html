@@ -1,0 +1,215 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<HTML>
+<HEAD>
+	<META http-equiv="CONTENT-TYPE" content="text/html; charset=UTF-8">
+
+	<LINK rel="stylesheet" type="text/css" href="ui.core.css">
+	
+	<LINK rel="stylesheet" type="text/css" href="ui.all.css">
+	<LINK rel="stylesheet" type="text/css" href="ui-1.7.1-demos.css">
+	<LINK rel="stylesheet" type="text/css" href="layout-default.css">
+	<link rel="stylesheet" type="text/css" media="screen" href="ui.jqgrid.css" />
+	<link type="text/css" href="demos.css" rel="stylesheet" />
+
+	<STYLE type="text/css">
+
+	
+
+		
+
+		/*
+		 *	CENTER-PANE TABS
+		 *
+		 *	These tabs have white-space around them,
+		 *	so the content-div provides the border for the tabs
+		 */
+		.ui-layout-pane-center {
+			background:	#FFD; /* to make pane background stand-out */
+			padding:	10px;
+			}
+			.ui-layout-pane-center .ui-tabs-nav {
+				/* remove rounded corners from bottom of 'tabs'*/
+				-moz-border-radius-bottomleft:		0;
+				-moz-border-radius-bottomright:		0;
+				-webkit-border-bottom-left-radius:	0;
+				-webkit-border-bottom-right-radius:	0;
+			}
+			/* add border to the content-div - looks like border on the tab-panel */
+			.ui-layout-pane-center .ui-layout-content {
+				background:	#FFF;
+				border:			1px solid #AAA;
+				border-top:		0;
+				/* hard-coded the ui-corner-bottom class to this div to round the corners */
+			}
+			#feedback { font-size: 1.4em; }
+	#selectable .ui-selecting { background: #FECA40; }
+	#selectable .ui-selected { background: #F39814; color: white; }
+	#selectable { list-style-type: none; margin: 0; padding: 0; width: 100%; }
+	#selectable li { margin: 0px; padding: 0.4em; font-size: 1.4em; height: 18px; }
+
+	</STYLE>
+
+	<SCRIPT type="text/javascript" src="jquery-1.3.2.js"></SCRIPT>
+	
+	<SCRIPT type="text/javascript" src="ui.core.js"></SCRIPT>
+	<SCRIPT type="text/javascript" src="ui.tabs.js"></SCRIPT>
+	<SCRIPT type="text/javascript" src="ui.sortable.js"></SCRIPT>
+
+	<SCRIPT type="text/javascript" src="ui.accordion.js"></SCRIPT>
+	<SCRIPT type="text/javascript" src="ui.selectable.js"></SCRIPT>
+	<!-- using a beta Layout version because contains some bug-fixes relevant to this page  -->
+	<SCRIPT type="text/javascript" src="jquery.layout.js"></SCRIPT>
+	<SCRIPT type="text/javascript" src="ui.draggable.js"></SCRIPT>
+	<SCRIPT type="text/javascript" src="effects.core.js"></SCRIPT>
+
+	<SCRIPT type="text/javascript" src="effects.slide.js"></SCRIPT>
+	
+
+	<script src="jquery-ui-1.7.1.custom.min.js" type="text/javascript"></script>
+	
+	<script src="grid.locale-en.js" type="text/javascript"></script>
+	<script src="jquery.jqGrid.min.js" type="text/javascript"></script>
+	<script src="jquery.tablednd.js" type="text/javascript"></script>
+	<script src="jquery.contextmenu.js" type="text/javascript"></script>
+	<script src="grid.formedit.js" type="text/javascript"></script>
+	
+
+	<SCRIPT type="text/javascript">
+var gridimgpath = 'images';
+$(document).ready( function() {
+	$('body').layout({
+		west__size:			$('body').innerWidth() * 0.25
+	,	east__size:			200
+	,	north__size:		140
+	,	south__initClosed:	true
+	});
+$("#anounce").load("anounce.html");
+$("#menu").accordion();
+	
+	$("#selectable").selectable({
+		stop: function(){
+			var data = $(".ui-layout-center").empty();
+			$(".ui-selected", this).each(function(){
+				var index = $("#selectable li").index(this);
+			 	data.load("test"+(index+1)+".html", null, function() {
+					$('#tabs').tabs();
+					jQuery("#list4").jqGrid({
+					datatype: "local",
+					height: 150,
+				   	colNames:['Address','Netmask', 'Route'],
+				   	colModel:[
+				   		{name:'address',index:'address', width:100, editable:true,editoptions:{size:25}},
+				   		{name:'netmask',index:'netmask', width:110, editable:true,editoptions:{size:25}},
+				   		{name:'route',index:'route', width:100, editable:true,editoptions:{size:25}},
+				   		],
+				   	rowNum:10,
+   					rowList:[10,20,30],
+					imgpath: gridimgpath,
+				  	pager: jQuery('#pagered'),
+				   	caption: "INTERFACES"
+				});
+				var mydata = [
+						{address:"192.168.1.10",netmask:"255.255.255.0",route:"192.168.1.1"},
+						{address:"192.168.2.10",netmask:"255.255.255.0",route:"192.168.2.1"},
+						{address:"192.168.3.10",netmask:"255.255.255.0",route:"192.168.3.1"},
+						{address:"192.168.4.10",netmask:"255.255.255.0",route:"192.168.4.1"}						
+						];
+				for(var i=0;i<=mydata.length;i++)
+					jQuery("#list4").addRowData(i+1,mydata[i]);	
+					$("#add").click(function(){
+						jQuery("#list4").editGridRow("new",{height:280,reloadAfterSubmit:false});
+					});
+					$("#edit").click(function(){
+						var gr = jQuery("#list4").getGridParam('selrow');
+						if( gr != null ) jQuery("#list4").editGridRow(gr,{height:280,reloadAfterSubmit:false});
+						else alert("Please Select Row");
+					});
+				});
+			});
+		}
+	});
+
+
+	
+});
+
+	</SCRIPT>
+
+</HEAD>
+<BODY>
+
+<DIV class="ui-layout-north">
+<DIV id="anounce"></DIV>
+</DIV>
+
+
+
+	
+		
+	
+	
+
+<DIV class="ui-layout-center">
+	
+
+
+	
+
+</DIV>
+
+<DIV class="ui-layout-west">
+	<div id="menu">
+	<h3><a href="#">System</a></h3>
+	<div>
+		<ol id="selectable">
+			<li class="ui-widget-content">System 1</li>
+
+			<li class="ui-widget-content">System 2</li>
+			<li class="ui-widget-content">System 3</li>
+			<li class="ui-widget-content">System 4</li>
+			<li class="ui-widget-content">System 5</li>
+			<li class="ui-widget-content">System 6</li>
+		</ol>
+
+	</div>
+	<h3><a href="#">Network</a></h3>
+	<div>
+		<ol id="selectable">
+			<li class="ui-widget-content">Network 1</li>
+			<li class="ui-widget-content">Network 2</li>
+			<li class="ui-widget-content">Network 3</li>
+
+			<li class="ui-widget-content">Network 4</li>
+			<li class="ui-widget-content">Network 5</li>
+			<li class="ui-widget-content">Network 6</li>
+		</ol>
+	</div>
+	<h3><a href="#">Service</a></h3>
+	<div>
+
+		<ol id="selectable">
+			<li class="ui-widget-content">Service 1</li>
+			<li class="ui-widget-content">Service 2</li>
+			<li class="ui-widget-content">Service 3</li>
+			<li class="ui-widget-content">Service 4</li>
+			<li class="ui-widget-content">Service 5</li>
+
+			<li class="ui-widget-content">Service 6</li>
+		</ol>
+	</div>
+	</div>
+</DIV>
+
+
+<DIV class="ui-layout-east">
+	
+</DIV>
+
+
+<DIV class="ui-layout-south">
+	South Pane
+</DIV>
+
+
+</BODY>
+</HTML>

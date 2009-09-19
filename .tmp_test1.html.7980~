@@ -1,0 +1,144 @@
+
+<DIV id="tabs">
+<UL>
+		<LI><A href="#tabs-1">Interfaces</A></LI>
+		<LI><A href="#tabs-2">Networks</A></LI>
+		<LI><A href="#tabs-3">Routes</A></LI>
+	</UL>
+	<!-- add wrapper that Layout will auto-size to 'fill space' -->
+	
+	<DIV class="ui-layout-content ui-corner-bottom">
+		<DIV id="tabs-1">
+			<div id="contentPad">
+			<form>
+				<input name="status" id="status" value="ip" type="text" onblur="runValidation(this, 'errorMessage');">
+				<span class="formInfo"><a href="ajax.htm?width=375" class="jTip" id="one" name="IP ADDRESS TIP:">?</a></span>
+			</form>
+			<span id="errorMessage" style="color:red;"></span>
+			<form>
+				<input name="status" id="status" value="netmask" type="text" onblur="runValidationMask(this, 'errorMessage2');">
+				<span class="formInfo"><a href="ajax.htm?width=375" class="jTip" id="two" name="NETMASK TIP:">?</a></span>
+			</form>
+			<span id="errorMessage2" style="color:red;"></span>
+			</div>
+		</DIV>
+		<DIV id="tabs-2">
+			<div>
+			 	<p>WAN</p>
+			  <select multiple id="select1">
+			   <option value="1">eth1</option>
+			   <option value="2">eth2</option>
+			   <option value="3">eth3</option>
+			   <option value="4">eth4</option>
+			  </select>
+			  <a href="#" id="add">add &gt;&gt;</a>
+			 </div>
+			 <div>
+			 	<p>LAN</p>
+			  <select multiple id="select2"></select>
+			  <a href="#" id="remove">&lt;&lt; remove</a>
+			 </div>
+		</DIV>
+		<DIV id="tabs-3">
+			<P>Static Routes</P>
+		</DIV>
+	</DIV><!--- END content-body --->
+	
+</DIV>
+<SCRIPT type="text/javascript" src="jtip.js"></SCRIPT>
+<script type="text/javascript">
+			$(document).ready(function() {
+			$('input[type="text"]').addClass("idleField");
+			$('input[type="text"]').focus(function() {
+			$(this).removeClass("idleField").addClass("focusField");
+			if (this.value == this.defaultValue){
+			this.value = '';
+			}
+			if(this.value != this.defaultValue){
+			this.select();
+			}
+			});
+			$('input[type="text"]').blur(function() {
+			$(this).removeClass("focusField").addClass("idleField");
+			if ($.trim(this.value == '')){
+			this.value = (this.defaultValue ? this.defaultValue : '');
+			}
+			});
+			$('#add').click(function() {
+			  return !$('#select1 option:selected').remove().appendTo('#select2');
+			});
+			  $('#remove').click(function() {
+			  return !$('#select2 option:selected').remove().appendTo('#select1');
+			});
+			});
+			function validateIP(el) {
+			var isValid = true;
+			var s = el.value.split('.');
+			var i = 4;
+			var isValid = (s.length == i);
+			while (i-- && isValid) {
+			isValid = (0 <= s[i]) && (s[i] <= 255);
+			}
+			return !!isValid;
+			}
+			
+			function runValidation(el, id) {
+			var errorEl = document.getElementById(id);
+			errorEl.innerHTML = validateIP(el)? '' :
+			'Invalid IP address';
+			}
+			function validateNetMask(mask)
+{
+        //m[0] can be 128, 192, 224, 240, 248, 252, 254, 255
+	//m[1] can be 128, 192, 224, 240, 248, 252, 254, 255 if m[0] is 255, else m[1] must be 0
+	//m[2] can be 128, 192, 224, 240, 248, 252, 254, 255 if m[1] is 255, else m[2] must be 0
+	//m[3] can be 128, 192, 224, 240, 248, 252, 254, 255 if m[2] is 255, else m[3] must be 0
+
+			var isValid = true;
+			var correct_range = {128:1,192:1,224:1,240:1,248:1,252:1,254:1,255:1,0:1};
+			var m = mask.value.split('.');
+			var i = 4;
+			var isValid = (m.length == i);
+			while (i-- && isValid) {
+				
+				if (!(m[i] in correct_range)) {
+					isValid = 0;
+					break;
+				}
+				if ((m[0] == 0) || (m[0] != 255 && m[1] != 0) || (m[1] != 255 && m[2] != 0) || (m[2] != 255 && m[3] != 0)) {
+					isValid = 0;
+				}
+			}
+	
+			return !!isValid;
+}
+			function runValidationMask(mask, id){
+				var errorEl = document.getElementById(id);
+				errorEl.innerHTML = validateNetMask(mask)? '' : 'Invalid Netmask';
+			}
+		</script>
+		<style type="text/css">
+			
+			@import "global.css";
+
+			#status{
+			width:40%;
+			padding:5px;
+			outline:none;
+			height:15px;
+			}
+			.focusField{
+			border:solid 2px #73A6FF;
+			background:#EFF5FF;
+			color:#000;
+			}
+			.idleField{
+			background:#EEE;
+			color: #6F6F6F;
+			border: solid 2px #DFDFDF;
+			}
+			select {
+		   	width: 100px;
+		  	height: 100px;
+			}
+		</style>

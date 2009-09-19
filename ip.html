@@ -1,0 +1,33 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+		<title>Untitled Document</title>
+	</head>
+	<body>
+		<label for="in0">
+Enter IP address as nnn.nnn.nnn.nnn
+<input type="text" id="in0"
+onblur="runValidation(this, 'errorMessage');"></label>
+<span id="errorMessage" style="color:red;"></span>
+<script type="text/javascript">
+
+function validateIP(el) {
+var isValid = true;
+var s = el.value.split('.');
+var i = 4;
+var isValid = (s.length == i);
+while (i-- && isValid) {
+isValid = (0 <= s[i]) && (s[i] <= 255);
+}
+return !!isValid;
+}
+
+function runValidation(el, id) {
+var errorEl = document.getElementById(id);
+errorEl.innerHTML = validateIP(el)? '' :
+'Invalid IP address';
+}
+</script>
+	</body>
+</html>

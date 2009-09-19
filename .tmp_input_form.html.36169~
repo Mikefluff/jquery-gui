@@ -1,0 +1,102 @@
+		<script type="text/javascript">
+			$(document).ready(function() {
+			$('input[type="text"]').addClass("idleField");
+			$('input[type="text"]').focus(function() {
+			$(this).removeClass("idleField").addClass("focusField");
+			if (this.value == this.defaultValue){
+			this.value = '';
+			}
+			if(this.value != this.defaultValue){
+			this.select();
+			}
+			});
+			$('input[type="text"]').blur(function() {
+			$(this).removeClass("focusField").addClass("idleField");
+			if ($.trim(this.value == '')){
+			this.value = (this.defaultValue ? this.defaultValue : '');
+			}
+			});
+			});
+			function validateIP(el) {
+			var isValid = true;
+			var s = el.value.split('.');
+			var i = 4;
+			var isValid = (s.length == i);
+			while (i-- && isValid) {
+			isValid = (0 <= s[i]) && (s[i] <= 255);
+			}
+			return !!isValid;
+			}
+			
+			function runValidation(el, id) {
+			var errorEl = document.getElementById(id);
+			errorEl.innerHTML = validateIP(el)? '' :
+			'Invalid IP address';
+			}
+			function validateNetMask(mask)
+{
+        //m[0] can be 128, 192, 224, 240, 248, 252, 254, 255
+	//m[1] can be 128, 192, 224, 240, 248, 252, 254, 255 if m[0] is 255, else m[1] must be 0
+	//m[2] can be 128, 192, 224, 240, 248, 252, 254, 255 if m[1] is 255, else m[2] must be 0
+	//m[3] can be 128, 192, 224, 240, 248, 252, 254, 255 if m[2] is 255, else m[3] must be 0
+
+			var isValid = true;
+			var correct_range = {128:1,192:1,224:1,240:1,248:1,252:1,254:1,255:1,0:1};
+			var m = mask.value.split('.');
+			var i = 4;
+			var isValid = (m.length == i);
+			while (i-- && isValid) {
+				
+				if (!(m[i] in correct_range)) {
+					isValid = 0;
+					break;
+				}
+				if ((m[0] == 0) || (m[0] != 255 && m[1] != 0) || (m[1] != 255 && m[2] != 0) || (m[2] != 255 && m[3] != 0)) {
+					isValid = 0;
+				}
+			}
+	
+			return !!isValid;
+}
+			function runValidationMask(mask, id){
+				var errorEl = document.getElementById(id);
+				errorEl.innerHTML = validateNetMask(mask)? '' : 'Invalid Netmask';
+			}
+		</script>
+		<style type="text/css">
+			*{
+			margin:0;
+			padding:0;
+			font:bold 8px "Lucida Grande", Arial, sans-serif;
+			}
+			body {
+			padding: 10px;
+			}
+			#status{
+			width:20%;
+			padding:5px;
+			outline:none;
+			height:10px;
+			}
+			.focusField{
+			border:solid 2px #73A6FF;
+			background:#EFF5FF;
+			color:#000;
+			}
+			.idleField{
+			background:#EEE;
+			color: #6F6F6F;
+			border: solid 2px #DFDFDF;
+			}
+			
+		</style>
+
+		<form>
+			<input name="status" id="status" value="ip" type="text" onblur="runValidation(this, 'errorMessage');">
+		</form>
+		<span id="errorMessage" style="color:red;"></span>
+		<form>
+			<input name="status" id="status" value="netmask" type="text" onblur="runValidationMask(this, 'errorMessage2');">
+		</form>
+		<span id="errorMessage2" style="color:red;"></span>
+	

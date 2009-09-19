@@ -1,0 +1,20 @@
+/* hide container until all is ready */
+.test, .test2,.test3,.test4{
+	display: none;
+}
+
+/*Content Container*/
+.contentContainer {
+	padding-left: 0px;	
+	float: left;
+	width:0px;
+	height: 110px;	
+	overflow:hidden;
+}
+.contentWrapper{	
+}
+.contentInnerWrapper{
+	text-align: justify;
+	padding: 10px;
+}
+
